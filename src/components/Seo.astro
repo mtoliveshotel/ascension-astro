@@ -1,12 +1,25 @@
 ---
 import { allLangs } from '../i18n';
 const { lang } = Astro.props as { lang: 'en' | 'ru' | 'tr' | 'ar' | 'he' };
+
 const site = (Astro.site ? Astro.site.toString().replace(/\/$/, '') : '');
-const currentPath = Astro.url.pathname.replace(/\/+$/, '/') || '/';
+const base = import.meta.env.BASE_URL; // e.g. "/ascension-astro/"
+
+// Path relative to the repo base ("/", "/ar/", etc.)
+const relFromBase = Astro.url.pathname.startsWith(base)
+  ? '/' + Astro.url.pathname.slice(base.length)
+  : Astro.url.pathname;
+
+// Build absolute URLs that include the base
+const abs = (p: string) => site + base + p.replace(/^\//, '');
 const pathFor = (l: string) => (l === 'en' ? '/' : `/${l}/`);
 ---
-<link rel="canonical" href={`${site}${currentPath}`} />
+<link rel="canonical" href={abs(relFromBase)} />
 {allLangs.map((l) => (
-  <link rel="alternate" hreflang={l} href={`${site}${pathFor(l)}`} />
+  <link rel="alternate" hreflang={l} href={abs(pathFor(l))} />
 ))}
-<link rel="alternate" hreflang="x-default" href={`${site}/`} />
+<link rel="alternate" hreflang="x-default" href={abs('/')} />
+
+
+
+
