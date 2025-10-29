@@ -9,17 +9,18 @@ const copy = getCopy(lang as any);
   <Hero title={copy.title} subtitle={copy.subtitle} ctaText={copy.ctaText} ctaHref={copy.ctaHref} />
   <section class="grid">
     <div class="card">
-      <img src="/tours/jerusalem.jpg" alt="Jerusalem tour" />
+      <img src={import.meta.env.BASE_URL + 'tours/jerusalem.jpg'} alt="Jerusalem tour" />
       <h3>{copy.card1Title}</h3>
       <p set:html={copy.card1Html} />
     </div>
     <div class="card">
-      <img src="/tours/classic.jpg" alt="Classic Israel tour" />
+      <img src={import.meta.env.BASE_URL + 'tours/classic.jpg'} alt="Classic Israel tour" />
       <h3>{copy.card2Title}</h3>
       <p set:html={copy.card2Html} />
     </div>
     <div class="card">
       <img src="/tours/galilee.jpg" alt="Galilee tour" />
+      <img src={import.meta.env.BASE_URL + 'tours/galilee.jpg'} alt="Galilee tour" />
       <h3>{copy.card3Title}</h3>
       <p set:html={copy.card3Html} />
     </div>
