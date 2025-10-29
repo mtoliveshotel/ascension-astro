@@ -1,0 +1,12 @@
+---
+import { languages } from '../i18n';
+const { lang } = Astro.props as { lang: 'en' | 'ru' | 'tr' | 'ar' | 'he' };
+---
+<header class="site-header">
+  <a class="logo" href={lang === 'en' ? '/' : `/${lang}/`}>Ascension Tours</a>
+  <nav class="lang-nav">
+    {Object.entries(languages).map(([code, info]) => (
+      <a href={code === 'en' ? '/' : `/${code}/`} class={code === lang ? 'active' : ''}>{info.label}</a>
+    ))}
+  </nav>
+</header>
