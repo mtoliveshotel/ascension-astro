@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/Hero.astro';
 import { getCopy } from '../../utils/copy';
+import ContactForm from '../../components/ContactForm.astro';
 const lang = 'ar';
 const copy = getCopy(lang as any);
 ---
@@ -28,4 +29,5 @@ const copy = getCopy(lang as any);
     <h2>{copy.contactTitle}</h2>
     <div set:html={copy.contactHtml} />
   </section>
+  <ContactForm />
 </Base>
