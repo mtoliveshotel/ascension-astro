@@ -41,25 +41,18 @@ const API_URL = 'https://api.ascension.tours/contact.php';
 </style>
 
 <script>
-  // Minimal debug: intercept the form submit and ping the API
   (function () {
-    const form = document.querySelector('form');             // only form on page
-    const status = document.createElement('p');
-    status.id = 'form-debug';
-    status.style.marginTop = '8px';
-    status.style.fontSize = '12px';
-    status.style.opacity = '0.8';
-    form?.appendChild(status);
+    const form = document.querySelector('#contact');                 // matches your <form id="contact">
+    const status = document.querySelector('#status');                // reuse the existing status <p>
+    const submitBtn = form?.querySelector('button[type="submit"]'); // define the button
 
-    const form = document.querySelector('#contact-form');
-    if (!form) return;
+    if (!form || !status) return;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-    
-      submitBtn.disabled = true;
       status.textContent = 'Sending…';
-    
+      submitBtn?.setAttribute('disabled', '');
+
       try {
         const res = await fetch('https://api.ascension.tours/contact.php', {
           method: 'POST',
@@ -67,21 +60,16 @@ const API_URL = 'https://api.ascension.tours/contact.php';
           mode: 'cors',
           credentials: 'omit',
         });
-    
         if (!res.ok) throw new Error('bad status ' + res.status);
-    
+
         status.textContent = 'Thanks — your message was sent.';
         form.reset();
       } catch (err) {
         status.textContent = 'Sorry — could not send. Please try again in a minute.';
       } finally {
-        submitBtn.disabled = false;
+        submitBtn?.removeAttribute('disabled');
       }
     });
-
-
-
-
   })();
 </script>
 
