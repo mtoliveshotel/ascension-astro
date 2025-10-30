@@ -3,4 +3,57 @@ const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <p>&copy; {year} Ascension Tours</p>
+
+
+
+
+
+<span id="api-pill" style="
+  display:inline-block;padding:4px 8px;border-radius:999px;
+  font-size:12px;line-height:1;vertical-align:middle;
+  background:#9ca3af;color:white;margin-left:8px;">
+  API: checking…
+</span>
+
+<script>
+(function () {
+  const pill = document.getElementById('api-pill');
+  if (!pill) return;
+
+  const ctrl = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), 5000);
+
+  fetch('https://api.ascension.tours/ping.php', { signal: ctrl.signal })
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(() => {
+      pill.textContent = 'API: online';
+      pill.style.background = '#16a34a'; // green
+    })
+    .catch(() => {
+      pill.textContent = 'API: offline';
+      pill.style.background = '#dc2626'; // red
+    })
+    .finally(() => clearTimeout(timeout));
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
 </footer>
+
+
+
+
+
+
+
