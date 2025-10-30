@@ -1,2 +1,3 @@
 User-agent: *
 Disallow: /
+Sitemap: https://mtoliveshotel.github.io/ascension-astro/sitemap-index.xml
