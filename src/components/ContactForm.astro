@@ -51,26 +51,37 @@ const API_URL = 'https://api.ascension.tours/contact.php';
     status.style.opacity = '0.8';
     form?.appendChild(status);
 
-    if (!form) {
-      console.log('[contact-debug] No form found');
-      return;
-    }
+    const form = document.querySelector('#contact-form');
+    if (!form) return;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      status.textContent = '[contact-debug] click → sending ping…';
+    
+      submitBtn.disabled = true;
+      status.textContent = 'Sending…';
+    
       try {
-        const url = 'https://api.ascension.tours/ping.php?from=contact&ts=' + Date.now();
-        const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
-        const txt = await res.text();
-        console.log('[contact-debug] ping status:', res.status, txt);
-        status.textContent = '[contact-debug] ping status ' + res.status;
-        alert('Debug: ping.php responded with status ' + res.status);
+        const res = await fetch('https://api.ascension.tours/contact.php', {
+          method: 'POST',
+          body: new FormData(form),
+          mode: 'cors',
+          credentials: 'omit',
+        });
+    
+        if (!res.ok) throw new Error('bad status ' + res.status);
+    
+        status.textContent = 'Thanks — your message was sent.';
+        form.reset();
       } catch (err) {
-        console.error('[contact-debug] JS error:', err);
-        status.textContent = '[contact-debug] JS error, see console';
+        status.textContent = 'Sorry — could not send. Please try again in a minute.';
+      } finally {
+        submitBtn.disabled = false;
       }
     });
+
+
+
+
   })();
 </script>
 
