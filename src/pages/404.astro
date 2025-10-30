@@ -1,0 +1,25 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const base = '/ascension-astro/';
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 – Page not found | Ascension Tours</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href={base + 'favicon.ico'} sizes="any" />
+    <link rel="stylesheet" href={base + 'styles/global.css'} />
+  </head>
+  <body>
+    <Header />
+    <main style="min-height:60vh;padding:2rem 1rem;max-width:1100px;margin:0 auto;">
+      <h1 style="margin-bottom:0.5rem;">Page not found</h1>
+      <p>We couldn’t find the page you were looking for.</p>
+      <p><a href={base} class="btn">Return to homepage</a></p>
+    </main>
+    <Footer />
+  </body>
+</html>
