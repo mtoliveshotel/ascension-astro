@@ -1,25 +1,53 @@
 ---
 import { allLangs } from '../i18n';
-const { lang } = Astro.props as { lang: 'en' | 'ru' | 'tr' | 'ar' | 'he' };
 
+type Lang = 'en' | 'ru' | 'tr' | 'ar' | 'he';
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  image?: string; // optional override (path relative to /public or absolute URL)
+}
+
+const props = Astro.props as Props;
+
+// Defaults (you can override per page by passing props to <Seo />)
+const lang = props.lang;
+const title = props.title ?? 'Ascension Tours';
+const description = props.description ?? 'Small-group, expert-led tours from Jerusalem.';
 const site = (Astro.site ? Astro.site.toString().replace(/\/$/, '') : '');
-const base = import.meta.env.BASE_URL; // e.g. "/ascension-astro/"
-
-// Path relative to the repo base ("/", "/ar/", etc.)
+const base = import.meta.env.BASE_URL;           // e.g. "/ascension-astro/"
 const relFromBase = Astro.url.pathname.startsWith(base)
   ? '/' + Astro.url.pathname.slice(base.length)
   : Astro.url.pathname;
 
-// Build absolute URLs that include the base
-const abs = (p: string) => site + base + p.replace(/^\//, '');
+const abs = (p: string) => site + base + p.replace(/^\//, ''); // make absolute URL using base
 const pathFor = (l: string) => (l === 'en' ? '/' : `/${l}/`);
+
+// Choose image: override via props.image, else fall back to hero.jpg from /public
+const imageAbs = props.image
+  ? (props.image.startsWith('http') ? props.image : abs(props.image))
+  : abs('/hero.jpg');
 ---
+
 <link rel="canonical" href={abs(relFromBase)} />
 {allLangs.map((l) => (
   <link rel="alternate" hreflang={l} href={abs(pathFor(l))} />
 ))}
 <link rel="alternate" hreflang="x-default" href={abs('/')} />
 
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Ascension Tours" />
+<meta property="og:url" content={abs(relFromBase)} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageAbs} />
+<meta property="og:image:alt" content={title} />
 
-
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageAbs} />
 
