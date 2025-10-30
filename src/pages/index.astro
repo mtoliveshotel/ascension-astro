@@ -32,4 +32,64 @@ const copy = getCopy(lang as any);
     <div set:html={copy.contactHtml} />
   </section>
 <ContactForm />
+<script is:inline>
+(() => {
+  const form =
+    document.querySelector('form#contact') ||
+    document.querySelector('form'); // fall back to first form on page
+  if (!form) return;
+
+  const nameEl  = form.querySelector('input[name="name"], input[type="text"]');
+  const emailEl = form.querySelector('input[name="email"], input[type="email"]');
+  const msgEl   = form.querySelector('textarea[name="message"], textarea');
+  const btn     = form.querySelector('button[type="submit"], button, input[type="submit"]');
+
+  // ensure we have a place to show status
+  let statusEl = document.querySelector('#contactStatus');
+  if (!statusEl) {
+    statusEl = document.createElement('p');
+    statusEl.id = 'contactStatus';
+    statusEl.style.marginTop = '8px';
+    form.appendChild(statusEl);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!nameEl || !emailEl || !msgEl) return;
+
+    btn?.setAttribute('disabled', '');
+    statusEl.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('https://api.ascension.tours/send.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'cors',
+        cache: 'no-store',
+        body: JSON.stringify({
+          name:    nameEl.value.trim(),
+          email:   emailEl.value.trim(),
+          message: msgEl.value.trim(),
+          // honeypot (if not present, this is just empty)
+          website: form.querySelector('input[name="website"]')?.value || ''
+        })
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || ('HTTP ' + res.status));
+      }
+
+      statusEl.textContent = 'Thanks — your message has been sent.';
+      form.reset();
+    } catch (err) {
+      console.error('[contact] send failed:', err);
+      statusEl.textContent = 'Sorry—could not send. Please try again in a minute.';
+    } finally {
+      btn?.removeAttribute('disabled');
+    }
+  });
+})();
+</script>
+
 </Base>
