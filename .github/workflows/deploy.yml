@@ -5,15 +5,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# Required for Pages + OIDC deploy
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Keep only the latest run; cancel older in-flight builds
 concurrency:
-  group: pages
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
@@ -26,24 +24,22 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 20
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-      
+
       - name: Build
         run: npm run build
-        # Astro outputs to ./dist by default
 
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ./dist   # Astro's default output
 
   deploy:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
