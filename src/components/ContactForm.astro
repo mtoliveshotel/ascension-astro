@@ -1,0 +1,95 @@
+---
+const API_URL = 'https://api.ascension.tours/contact.php';
+---
+
+<form id="contact" class="contact" novalidate>
+  <div class="field">
+    <label for="name">Name</label>
+    <input id="name" name="name" required minlength="2" maxlength="100" autocomplete="name" />
+    <div class="err" data-for="name"></div>
+  </div>
+
+  <div class="field">
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" required maxlength="254" inputmode="email" dir="ltr" autocomplete="email" />
+    <div class="err" data-for="email"></div>
+  </div>
+
+  <div class="field">
+    <label for="message">Message</label>
+    <textarea id="message" name="message" required minlength="10" maxlength="4000" rows="5"></textarea>
+    <div class="err" data-for="message"></div>
+  </div>
+
+  <!-- Honeypot (bots fill this; humans don't) -->
+  <input type="text" name="hp" tabindex="-1" autocomplete="off"
+         style="position:absolute;left:-9999px;opacity:0" aria-hidden="true" />
+
+  <button type="submit" class="btn" data-state="idle">Send</button>
+  <p id="status" aria-live="polite" style="margin-top:.75rem;"></p>
+  <noscript><p>Please enable JavaScript to send the form.</p></noscript>
+</form>
+
+<style>
+  .contact .field { margin-bottom: 12px; }
+  .contact label { display:block; font-weight:600; margin-bottom:4px; }
+  .contact input, .contact textarea {
+    width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:8px; font:inherit;
+  }
+  .contact .err { color:#b91c1c; font-size:12px; min-height:1em; }
+  .contact .btn { margin-top:8px; }
+</style>
+
+<script>
+(function () {
+  const form = document.getElementById('contact');
+  if (!form) return;
+  const status = form.querySelector('#status');
+
+  const setErr = (name, msg='') => {
+    const el = form.querySelector(`.err[data-for="${name}"]`);
+    if (el) el.textContent = msg;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setErr('name'); setErr('email'); setErr('message');
+    status.textContent = '';
+
+    const fd = new FormData(form);
+    const payload = {
+      name: (fd.get('name') || '').toString().trim(),
+      email: (fd.get('email') || '').toString().trim(),
+      message: (fd.get('message') || '').toString().trim(),
+      hp: (fd.get('hp') || '').toString()
+    };
+
+    // Basic client-side guardrails
+    if (!payload.name || payload.name.length < 2) { setErr('name','Please enter your name.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) { setErr('email','Enter a valid email.'); return; }
+    if (!payload.message || payload.message.length < 10) { setErr('message','Message is too short.'); return; }
+
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        let err = '';
+        try { err = (await res.json()).error || ''; } catch {}
+        throw new Error(err || ('HTTP ' + res.status));
+      }
+      status.textContent = 'Thanks! We’ll reply soon.';
+      form.reset();
+    } catch (err) {
+      status.textContent = 'Sorry—could not send. Please try again in a minute.';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Send';
+    }
+  });
+})();
+</script>
