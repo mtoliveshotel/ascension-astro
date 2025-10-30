@@ -41,55 +41,36 @@ const API_URL = 'https://api.ascension.tours/contact.php';
 </style>
 
 <script>
-(function () {
-  const form = document.getElementById('contact');
-  if (!form) return;
-  const status = form.querySelector('#status');
+  // Minimal debug: intercept the form submit and ping the API
+  (function () {
+    const form = document.querySelector('form');             // only form on page
+    const status = document.createElement('p');
+    status.id = 'form-debug';
+    status.style.marginTop = '8px';
+    status.style.fontSize = '12px';
+    status.style.opacity = '0.8';
+    form?.appendChild(status);
 
-  const setErr = (name, msg='') => {
-    const el = form.querySelector(`.err[data-for="${name}"]`);
-    if (el) el.textContent = msg;
-  };
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    setErr('name'); setErr('email'); setErr('message');
-    status.textContent = '';
-
-    const fd = new FormData(form);
-    const payload = {
-      name: (fd.get('name') || '').toString().trim(),
-      email: (fd.get('email') || '').toString().trim(),
-      message: (fd.get('message') || '').toString().trim(),
-      hp: (fd.get('hp') || '').toString()
-    };
-
-    // Basic client-side guardrails
-    if (!payload.name || payload.name.length < 2) { setErr('name','Please enter your name.'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) { setErr('email','Enter a valid email.'); return; }
-    if (!payload.message || payload.message.length < 10) { setErr('message','Message is too short.'); return; }
-
-    const btn = form.querySelector('button[type="submit"]');
-    btn.disabled = true; btn.textContent = 'Sending…';
-
-    try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) {
-        let err = '';
-        try { err = (await res.json()).error || ''; } catch {}
-        throw new Error(err || ('HTTP ' + res.status));
-      }
-      status.textContent = 'Thanks! We’ll reply soon.';
-      form.reset();
-    } catch (err) {
-      status.textContent = 'Sorry—could not send. Please try again in a minute.';
-    } finally {
-      btn.disabled = false; btn.textContent = 'Send';
+    if (!form) {
+      console.log('[contact-debug] No form found');
+      return;
     }
-  });
-})();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '[contact-debug] click → sending ping…';
+      try {
+        const url = 'https://api.ascension.tours/ping.php?from=contact&ts=' + Date.now();
+        const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+        const txt = await res.text();
+        console.log('[contact-debug] ping status:', res.status, txt);
+        status.textContent = '[contact-debug] ping status ' + res.status;
+        alert('Debug: ping.php responded with status ' + res.status);
+      } catch (err) {
+        console.error('[contact-debug] JS error:', err);
+        status.textContent = '[contact-debug] JS error, see console';
+      }
+    });
+  })();
 </script>
+
