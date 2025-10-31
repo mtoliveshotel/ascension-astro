@@ -57,32 +57,34 @@ const API_URL = 'https://api.ascension.tours/send.php';
       submitBtn?.setAttribute('disabled', '');
 
 
+try {
+  console.log('[contact] posting to', API_URL);
 
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    body: new FormData(form),
+    // defaults are fine; keeping it simple reduces preflight risk
+    // mode: 'cors',
+    // credentials: 'omit',
+  });
 
+  console.log('[contact] fetch status', res.status);
 
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: new FormData(form),
-          mode: 'cors',
-          credentials: 'omit',
-        });
-      
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok || data.ok === false) {
-          // Show the exact reason from send.php (e.g., invalid_message)
-          status.textContent = 'Error: ' + (data.error || ('HTTP ' + res.status));
-        } else {
-          status.textContent = 'Thanks — your message was sent.';
-          form.reset();
-        }
-      } catch (err) {
-        status.textContent = 'Sorry — could not send. Please try again in a minute.';
-      } finally {
-        submitBtn?.removeAttribute('disabled');
-      }
+  const data = await res.json().catch(() => ({}));
+  console.log('[contact] response body', data);
 
-
+  if (!res.ok || data.ok === false) {
+    status.textContent = 'Error: ' + (data.error || ('HTTP ' + res.status));
+  } else {
+    status.textContent = 'Thanks — your message was sent.';
+    form.reset();
+  }
+} catch (err) {
+  console.error('[contact] fetch error', err);
+  status.textContent = 'JS error: ' + (err?.message || err);
+} finally {
+  submitBtn?.removeAttribute('disabled');
+}
 
 
 
