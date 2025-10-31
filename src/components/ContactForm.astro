@@ -1,5 +1,5 @@
 ---
-const API_URL = 'https://api.ascension.tours/contact.php';
+const API_URL = 'https://api.ascension.tours/send.php';
 ---
 
 <form id="contact" class="contact" novalidate>
@@ -54,7 +54,7 @@ const API_URL = 'https://api.ascension.tours/contact.php';
       submitBtn?.setAttribute('disabled', '');
 
       try {
-        const res = await fetch('https://api.ascension.tours/contact.php', {
+        const res = await fetch(API_URL, {
           method: 'POST',
           body: new FormData(form),
           mode: 'cors',
