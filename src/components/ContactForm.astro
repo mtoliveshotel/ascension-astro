@@ -49,6 +49,9 @@ const API_URL = 'https://api.ascension.tours/send.php';
     if (!form || !status) return;
 
     form.addEventListener('submit', async (e) => {
+
+      console.log('[contact] submit fired');
+
       e.preventDefault();
       status.textContent = 'Sending…';
       submitBtn?.setAttribute('disabled', '');
