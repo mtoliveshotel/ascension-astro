@@ -82,7 +82,18 @@ const API_URL = 'https://api.ascension.tours/send.php';
           body: JSON.stringify(payload),
           mode: 'cors'
         });
-    
+
+        // Friendly message for rate limits
+        if (res.status === 429) {
+          const retryAfter = parseInt(res.headers.get('Retry-After') || '0', 10);
+          const waitMsg = retryAfter > 0
+            ? `Too many attempts. Try again in ~${Math.ceil(retryAfter/60)} min.`
+            : 'Too many attempts. Please try again later.';
+          status.textContent = waitMsg;
+          submitBtn?.removeAttribute('disabled');
+          return;
+        }
+
         // Honeypot hit → backend returns 204; stay quiet
         if (res.status === 204) {
           status.textContent = '';
