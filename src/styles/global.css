@@ -9,13 +9,24 @@ html,body{margin:0;padding:0}
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#223}
 
 .site-header,.site-footer{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 0;background:#f8f9fb;border-bottom:1px solid #eee
+  padding:14px 0;
+  background:#f8f9fb;
+  border-bottom:1px solid #eee;
+}
+.site-footer{border-top:1px solid #eee; border-bottom:none}
+
+/* NEW: flex on the inner container */
+.site-header .container,
+.site-footer .container{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
 }
 
-.site-footer{border-top:1px solid #eee;border-bottom:none}
 .logo{font-weight:700;text-decoration:none;color:var(--brand)}
-.lang-nav a{margin-left:10px;text-decoration:none;color:#567}
+.lang-nav{display:flex; gap:10px; flex-wrap:wrap}
+.lang-nav a{text-decoration:none;color:#567; margin:0}
 .lang-nav a.active{font-weight:700;color:var(--brand)}
 main{padding-block:20px; padding-inline:0}
 .hero{position:relative;overflow:hidden;border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,.06)}
