@@ -3,16 +3,18 @@ import { languages } from '../i18n';
 const { lang } = Astro.props as { lang: 'en' | 'ru' | 'tr' | 'ar' | 'he' };
 ---
 <header class="site-header">
-  <a class="logo" href={
-    import.meta.env.BASE_URL + (lang === 'en' ? '' : `${lang}/`)
-  }>Ascension Tours</a>
-<nav class="lang-nav">
-    {Object.entries(languages).map(([code, info]) => (
-      <a
-        href={import.meta.env.BASE_URL + (code === 'en' ? '' : `${code}/`)}
-        class={code === lang ? 'active' : ''}>
-        {info.label}
-      </a>
-    ))}
-  </nav>
+  <div class="container">
+    <a class="logo" href={
+      import.meta.env.BASE_URL + (lang === 'en' ? '' : `${lang}/`)
+    }>Ascension Tours</a>
+    <nav class="lang-nav">
+        {Object.entries(languages).map(([code, info]) => (
+          <a
+            href={import.meta.env.BASE_URL + (code === 'en' ? '' : `${code}/`)}
+            class={code === lang ? 'active' : ''}>
+            {info.label}
+          </a>
+        ))}
+      </nav>
+  </div>
 </header>
