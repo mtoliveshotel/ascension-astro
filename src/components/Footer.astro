@@ -10,7 +10,6 @@ const year = new Date().getFullYear();
       background:#9ca3af;color:white;margin-left:8px;">
       API: checking…
     </span>
-    
     <script>
     (function () {
       const pill = document.getElementById('api-pill');
@@ -18,7 +17,7 @@ const year = new Date().getFullYear();
     
       const ctrl = new AbortController();
       const timeout = setTimeout(() => ctrl.abort(), 5000);
-    
+   
       fetch('https://api.ascension.tours/ping.php', { signal: ctrl.signal })
         .then(r => r.ok ? r.json() : Promise.reject())
         .then(() => {
@@ -33,18 +32,6 @@ const year = new Date().getFullYear();
     })();
     </script>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
 </footer>
 
 
