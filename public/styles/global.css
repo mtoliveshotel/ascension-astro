@@ -65,6 +65,10 @@ main{padding-block:20px; padding-inline:0}
 
 
 /* Basic RTL helpers */
-[dir="rtl"] .site-header, [dir="rtl"] .site-footer{flex-direction:row-reverse}
-[dir="rtl"] .lang-nav a{margin-left:0;margin-right:10px}
+[dir="rtl"] .site-header .container,
+[dir="rtl"] .site-footer .container{ flex-direction: row-reverse; }
+
+[dir="rtl"] .lang-nav{ flex-direction: row-reverse; }
+/* margins not needed because you're using gap */
+
 [dir="rtl"] .hero-copy{text-align:right}
