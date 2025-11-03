@@ -72,3 +72,31 @@ main{padding-block:20px; padding-inline:0}
 /* margins not needed because you're using gap */
 
 [dir="rtl"] .hero-copy{text-align:right}
+
+
+
+
+/* Keep the Dome visible by shifting the image's focal point */
+.hero-img{
+  object-fit: cover;          /* ensure full cover */
+  object-position: 70% center; /* push visible area right; tweak 65–75% to taste */
+}
+
+/* Mirror the focus for RTL pages if needed */
+[dir="rtl"] .hero-img{
+  object-position: 30% center; /* tweak 25–35% if the landmark sits left in RTL */
+}
+
+/* Make the overlay slimmer/softer so it obscures less */
+.hero-copy{
+  max-width: min(520px, 80%);  /* narrower box */
+  background: rgba(255,255,255,.80); /* slightly more transparent */
+}
+
+/* On small screens, move text below the image so nothing important gets covered */
+@media (max-width: 640px){
+  .hero-copy{
+    position: static;
+    margin-top: 12px;
+  }
+}
