@@ -6,11 +6,14 @@ const { title, subtitle, ctaText, ctaHref } = Astro.props as {
   ctaHref: string;
 };
 ---
+
 <section class="hero">
-  <img src={import.meta.env.BASE_URL + 'hero.jpg'} alt="Hero" class="hero-img" />
-  <div class="hero-copy">
-    <h1>{title}</h1>
-    <p class="sub">{subtitle}</p>
-    <a class="btn" href={ctaHref}>{ctaText}</a>
+  <img src={import.meta.env.BASE_URL + 'hero.jpg'} alt="Jerusalem Old City" class="hero-img" />
+  <div class="hero-copy hero-topbar">
+    <div class="hero-text">
+      <h1>{title}</h1>
+      <p class="sub">{subtitle}</p>
+    </div>
+    {ctaText && ctaHref && <a class="btn" href={ctaHref}>{ctaText}</a>}
   </div>
 </section>
