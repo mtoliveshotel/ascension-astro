@@ -100,3 +100,44 @@ main{padding-block:20px; padding-inline:0}
     margin-top: 12px;
   }
 }
+
+
+
+/* Top banner overlay that covers the skyline, not the domes */
+.hero-topbar{
+  position:absolute;
+  top:16px; left:24px; right:24px;      /* spans horizontally, shallow height */
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px;
+  padding:12px 16px;
+  border-radius:12px;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(4px);
+}
+
+/* Text block shrinks nicely if space is tight */
+.hero-text{min-width:0}
+.hero-text .sub{margin:.25rem 0 0}
+
+/* Button styling you already use; ensure it doesn't wrap oddly */
+.hero-topbar .btn{white-space:nowrap}
+
+/* Keep the interesting part of the image in view */
+.hero-img{object-fit:cover; object-position:center 45%} /* slightly higher horizon */
+
+/* RTL: put the button on the left of the text automatically */
+[dir="rtl"] .hero-topbar{flex-direction:row-reverse}
+
+/* Mobile: stack text then button, and move banner below the image */
+@media (max-width: 640px){
+  .hero-topbar{
+    position:static;
+    margin-top:12px;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+
+
+
+
